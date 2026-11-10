@@ -1,13 +1,66 @@
-# VNDB playtime and content-tag project
+# Playtime, Content Tags, and Community Reception of Visual Novels
 
-This CSE 163 project is currently at the proposal stage. The research
-analysis and complete dataset collection have not been implemented yet.
+An independent CSE 163 project by Bob investigating how visual novel
+playtime and content tags relate to user scores and voting activity.
+
+## Current progress
+
+- The proposal has been submitted.
+- `VN.ipynb` contains initial API experiments and checks of selected fields,
+  missing values, content tags, and language availability.
+- The current notebook requests the first 100 Japanese-original works in
+  ID order. This is exploratory data, not a random sample or the complete
+  dataset proposed for the research.
+- Full data collection, cleaning, exploratory data analysis (EDA), and the
+  final research results are still to be implemented.
+
+This project repository is public as required by the Part 2 EDA instructions:
+https://courses.cs.washington.edu/courses/cse163/26au/eda/
+
+## Research questions
+
+1. What is the relationship between playtime and average user scores?
+2. How do scores and vote counts differ among works with the Mystery,
+   Romance, and Comedy tags?
+3. Does the playtime-score relationship differ across these tags?
+
+These questions concern associations within the selected VNDB records.
+Rating-vote counts do not measure total readership or sales.
+
+## Data source
+
+[VNDB](https://vndb.org/) is a community-maintained visual novel database.
+Each work has a record containing information such as its title, release
+date, user scores, and user-submitted playtime estimates. Content tags are
+labels describing a work's themes or genres, such as Mystery or Romance.
+A work can have multiple tags.
+
+- [Kana API documentation](https://api.vndb.org/kana)
+- Data-query endpoint: `POST https://api.vndb.org/kana/vn`
+
+An API request asks VNDB for specified records and fields. The server
+returns JSON, which the notebook converts into a pandas DataFrame.
+The public work queries used here do not require an account or API token.
+
+Important fields include `average` (raw average user score), `rating`
+(Bayesian rating), `votecount` (number of rating votes), `length_minutes`
+(average submitted playtime in minutes), `length_votes` (number of submitted
+playtimes), and `tags` (nested tag records).
+
+To reproduce the current API experiment, install the dependencies below,
+open `VN.ipynb` in VS Code or Jupyter, and run its cells from top to bottom.
+An internet connection is needed. The API is updated over time, so a new
+request may differ from the outputs already saved in the notebook.
+The notebook does not yet implement complete dataset collection.
+
+The proposal describes the intended study cohort and analysis rules.
+Collection scripts, dated data snapshots, and full reproduction instructions
+will be added during the EDA work.
 
 ## Current local environment
 
 - Python 3.11.9
 - VS Code notebook kernel: `CSE163 (Python 3.11)`
-- Interpreter: `C:\Users\baolurier\AppData\Local\Programs\Python\Python311\python.exe`
 - Direct project dependencies are recorded in `requirements.txt`.
 
 Run this in a PowerShell terminal opened in the project directory:
@@ -34,33 +87,38 @@ virtual environment or package installation was needed for the setup check.
 
 ## Files
 
-- `Untitled-1.ipynb`: current exploratory notebook.
+- `VN.ipynb`: current exploratory notebook.
 - `vndb_proposal_draft.md`: editable English proposal draft.
-- `output/pdf/vndb_proposal_draft.pdf`: generated proposal PDF, stored locally.
+- `output/pdf/vndb_proposal_draft.pdf`: proposal PDF.
 - `proposal_feasibility_notes.md`: notes from the preliminary data check.
 - `check_environment.py`: local environment check, separate from research code.
 
-## Local Git workflow
+## Git and GitHub workflow
 
-Git records local versions. A GitHub repository is optional remote hosting;
-no remote repository is configured by this setup.
+Git records local versions. GitHub hosts the uploaded history:
+https://github.com/Bob0414/vndb-playtime-analysis
+
+The project currently uses the `main` branch. A separate branch is optional
+for an isolated experiment; it is not needed just to upload progress.
 
 After saving changes, inspect them before recording a new version:
 
 ```powershell
 git status
 git diff
-git add vndb_proposal_draft.md
-git commit -m "Revise project proposal"
+git add README.md VN.ipynb
+git commit -m "Update project exploration"
+git push
 git log --oneline
 ```
 
 Stage whichever specific files you intend to include. Notebook changes must
 be saved in VS Code before Git sees them. A local commit is not an off-device
-backup; remote backup can be configured separately.
+backup; `git push` uploads committed changes to GitHub.
 
 Downloaded data, generated outputs, local environments, and credentials are
-ignored by Git. They are not deleted. If needed, small test fixtures can later
+ignored by Git, apart from the explicitly tracked proposal PDF. They are not
+deleted. If needed, small test fixtures can later
 be stored under `tests/fixtures/`. The final project will need actual collection
 scripts and clear data-access instructions; this README is only the current
 setup guide.
