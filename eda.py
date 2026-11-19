@@ -28,39 +28,34 @@ def load_works(path):
 
 
 def select_playtimes(data):
-    """Select works with a score, positive playtime, and at least five votes
-    on playtime. Convert their playtime from minutes to hours.
-    """
-    keep = (
-        (data["length_votes"] >= 5)
-        & (data["length_minutes"] > 0)
-        & data["average"].notna()
-    )
-    playtimes = data.loc[keep].copy()
+    """Keep scored works with positive playtime and at least five estimates."""
+    enough_votes = data["length_votes"] >= 5
+    has_playtime = data["length_minutes"] > 0
+    has_score = data["average"].notna()
+    mask = enough_votes & has_playtime & has_score
+    playtimes = data[mask].copy()
     playtimes["length_hours"] = playtimes["length_minutes"] / 60
     return playtimes
 
 
-def tag_determine(work):
-    """Return the qualifying study tags for one visual novel."""
+def study_tags(tags):
+    """Return the names of the qualifying tags for one visual novel."""
     target_ids = ["g19", "g96", "g104"]
-    tags_dict = {}
-    for tag in work["tags"]:
+    names = []
+    for tag in tags:
         if (tag["id"] in target_ids
                 and tag["rating"] >= 2
                 and not tag["lie"]):
-            if work["title"] not in tags_dict:
-                tags_dict[work["title"]] = []
-            tags_dict[work["title"]].append(tag["name"])
-    return tags_dict
+            names.append(tag["name"])
+    return names
 
 
 def make_tag_table(data):
     """Build one row per work and qualifying tag for works with scores."""
     tag_rows = []
-    for _, work in data.dropna(subset=["average"]).iterrows():
-        tag_names = tag_determine(work).get(work["title"], [])
-        for tag_name in tag_names:
+    scored_works = data[data["average"].notna()]
+    for _, work in scored_works.iterrows():
+        for tag_name in study_tags(work["tags"]):
             tag_rows.append({
                 "id": work["id"],
                 "tag": tag_name,
@@ -108,8 +103,10 @@ def main():
     by_tag = tag_data.groupby("tag")
     print("\nWorks per tag")
     print(by_tag["id"].nunique())
-    print("\nAverage scores and rating vote counts by tag")
-    print(by_tag[["average", "votecount"]].describe().round(2).to_string())
+    print("\nAverage scores by tag")
+    print(by_tag["average"].describe().round(2))
+    print("\nRating vote counts by tag")
+    print(by_tag["votecount"].describe().round(2))
     save_plots(playtimes, tag_data, FIGURES)
     print("\nSaved playtime_scores.png and scores_by_tag.png to", FIGURES)
 
