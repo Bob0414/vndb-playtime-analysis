@@ -1,11 +1,15 @@
-"""Check the VNDB analysis rules on a few small examples."""
+"""
+Bob
+CSE 163 AE
+Check the VNDB analysis rules on a few small examples.
+"""
 
 import pandas as pd
 
 from eda import make_tag_table, select_playtimes
 
 
-def test_playtimes():
+def test_select_playtimes() -> None:
     """Keep the five-vote boundary and convert minutes to hours."""
     data = pd.DataFrame({
         "id": ["v1", "v2", "v3", "v4", "v5"],
@@ -18,7 +22,7 @@ def test_playtimes():
     assert result["length_hours"].tolist() == [2.0]
 
 
-def test_tag_table():
+def test_make_tag_table() -> None:
     """A work can have two qualifying tags even with no playtime."""
     tags = [
         {"id": "g19", "name": "Mystery", "rating": 2, "lie": False},
@@ -41,9 +45,8 @@ def test_tag_table():
 
 
 def main():
-    """Run both tests."""
-    test_playtimes()
-    test_tag_table()
+    test_select_playtimes()
+    test_make_tag_table()
     print("Both EDA tests passed.")
 
 

@@ -9,6 +9,8 @@ __pycache__/
 # Downloaded data and generated artifacts (document how to reproduce these)
 data/
 /vndb_initial_response.json
+/playtime_scores.png
+/scores_by_tag.png
 /vndb_first_200.json
 /vndb_checkpoint.json
 output/
