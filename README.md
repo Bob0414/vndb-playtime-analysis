@@ -6,13 +6,13 @@ playtime and content tags relate to user scores and voting activity.
 ## Current progress
 
 - The proposal has been submitted.
-- `VN.ipynb` contains initial API experiments and checks of selected fields,
-  missing values, content tags, and language availability.
-- The current notebook requests the first 100 Japanese-original works in
-  ID order. This is exploratory data, not a random sample or the complete
-  dataset proposed for the research.
-- Full data collection, cleaning, exploratory data analysis (EDA), and the
-  final research results are still to be implemented.
+- The collected VNDB snapshot contains 4,295 Japanese-original works marked
+  as finished, released from 2000 through 2025, with at least 50 rating votes.
+- `VN.ipynb` checks missing values, summarizes the main variables, and plots
+  playtime against average user score for 1,968 works with at least five
+  playtime submissions.
+- The notebook also compares scores and vote counts across Mystery, Romance,
+  and Comedy. A work can qualify for more than one group.
 
 This project repository is public as required by the Part 2 EDA instructions:
 https://courses.cs.washington.edu/courses/cse163/26au/eda/
@@ -47,15 +47,14 @@ Important fields include `average` (raw average user score), `rating`
 (average submitted playtime in minutes), `length_votes` (number of submitted
 playtimes), and `tags` (nested tag records).
 
-To reproduce the current API experiment, install the dependencies below,
-open `VN.ipynb` in VS Code or Jupyter, and run its cells from top to bottom.
-An internet connection is needed. The API is updated over time, so a new
-request may differ from the outputs already saved in the notebook.
-The notebook does not yet implement complete dataset collection.
+Open `VN.ipynb` from the project directory after installing the dependencies
+below. If you already have `data/vndb_eda.json`, start at **Load the saved
+data for EDA** and run the remaining cells in order.
 
-The proposal describes the intended study cohort and analysis rules.
-Collection scripts, dated data snapshots, and full reproduction instructions
-will be added during the EDA work.
+On a fresh checkout, run the notebook from the top with an internet
+connection. The collection cells retrieve the first 200 works and then save
+each subsequent page. The complete dataset is saved to `data/vndb_eda.json`.
+VNDB changes over time, so a fresh download may give different counts or scores.
 
 ## Current local environment
 
@@ -116,12 +115,8 @@ Stage whichever specific files you intend to include. Notebook changes must
 be saved in VS Code before Git sees them. A local commit is not an off-device
 backup; `git push` uploads committed changes to GitHub.
 
-Downloaded data, generated outputs, local environments, and credentials are
-ignored by Git, apart from the explicitly tracked proposal PDF. They are not
-deleted. If needed, small test fixtures can later
-be stored under `tests/fixtures/`. The final project will need actual collection
-scripts and clear data-access instructions; this README is only the current
-setup guide.
+The downloaded data and intermediate collection files are kept locally.
+The notebook includes the summary tables and figures from the saved snapshot.
 
 ## Dataset and challenge goals
 
